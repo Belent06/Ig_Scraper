@@ -1,0 +1,14 @@
+# Entorno virtual
+venv/
+.venv/
+__pycache__/
+
+# Datos sensibles y descargas
+instagram.com_cookies.txt
+*.session
+*.txt.txt
+mariiaa_beleen/
+*/
+
+# Configuración de PyCharm
+.idea/
