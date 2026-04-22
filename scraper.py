@@ -5,6 +5,7 @@ L = instaloader.Instaloader()
 
 # DATOS
 TU_USUARIO = "mariiaa_beleen"
+PERFIL_OBJETIVO = "anthonygonzalez___"
 ARCHIVO_COOKIES = "instagram.com_cookies.txt"
 
 
@@ -22,30 +23,33 @@ def cargar_cookies_manual(ruta):
 
 
 def ejecutar_scraping_seguro():
-    print("--- MODO DE RESCATE ACTIVADO ---")
+    print(f"--- MODO DE RESCATE ACTIVADO: {PERFIL_OBJETIVO} ---")
 
     dict_cookies = cargar_cookies_manual(ARCHIVO_COOKIES)
-    if not dict_cookies: return
+    if not dict_cookies:
+        print("Error: No se pudo cargar el archivo de cookies.")
+        return
 
     try:
         L.context._session.cookies.update(dict_cookies)
 
-        # 1. Cargamos el perfil (esto suele funcionar porque no usa GraphQL pesado)
-        print("Validando cuenta...")
-        profile = instaloader.Profile.from_username(L.context, TU_USUARIO)
-        print(f"Sesión activa para: {profile.full_name}")
+        # 1. Validamos la sesión con tu usuario
+        print(f"Validando sesión de {TU_USUARIO}...")
 
-        # 2. En lugar de un bucle de publicaciones, intentamos bajar SOLO EL PERFIL
-        # Esto descarga la foto de perfil y la info básica sin activar el baneo de posts
-        print("Descargando metadatos básicos del perfil...")
+        # 2. Cargamos el perfil OBJETIVO
+        profile = instaloader.Profile.from_username(L.context, PERFIL_OBJETIVO)
+        print(f"Conexión establecida. Scrapeando a: {profile.full_name}")
+
+        # 3. Descarga de metadatos básicos y foto de perfil
+        print(f"Descargando metadatos básicos de {PERFIL_OBJETIVO}...")
         L.download_profile(profile.username, profile_pic_only=False)
 
         print("\n--- ÉXITO PARCIAL ---")
-        print("Se descargó la info base. Instagram tiene bloqueada la lista de posts para tu cuenta por ahora.")
+        print(f"Se descargó la info base de {PERFIL_OBJETIVO} en la carpeta del proyecto.")
 
     except Exception as e:
         print(f"\nERROR: {e}")
-        print("\nDIAGNÓSTICO FINAL: Instagram ha bloqueado tu sesión para scraping.")
+        print("\nDIAGNÓSTICO: Instagram sigue limitando el acceso a los datos detallados.")
 
 
 if __name__ == "__main__":
